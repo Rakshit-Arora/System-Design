@@ -1,0 +1,36 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Iheader
+
+# Target executable
+TARGET = bookmyshow
+
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+
+# Find all .cpp files inside src and main.cpp
+SRCS = $(wildcard $(SRC_DIR)/*.cpp) main.cpp
+
+# Convert .cpp -> .o in obj/
+OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+
+# Default rule
+all: $(TARGET)
+
+# Link all object files into final executable
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Compile .cpp into .o inside obj/
+$(OBJ_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)   # create obj/ subdir if needed
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean up
+clean:
+	rm -rf $(OBJ_DIR) $(TARGET)
+
+# Run program after building
+run: all
+	./$(TARGET)
